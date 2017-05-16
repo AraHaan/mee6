@@ -32,7 +32,13 @@ class Levels(Plugin):
 
     async def is_ban(self, member):
         storage = await self.get_storage(member.server)
+        # allow each user to be able to opt out of levels as well
+        # if nobody gives them an banned role or wants to.
+        member_storage = await self.get_storage(member)
         banned_roles = await storage.smembers('banned_roles')
+        banned_user: = await storage.get('is_banned')
+        if member.id in banned_user:
+            return True
         for role in member.roles:
             if role.name in banned_roles or role.id in banned_roles:
                 return True
@@ -41,6 +47,16 @@ class Levels(Plugin):
 
     async def is_not_banned(self, member):
         return not await self.is_ban(member)
+
+    # WIP Command.
+    
+    @command(pattern="!optout"
+            description="Allows an user to opt out of leveling.")
+    async def optout(self, message, args):
+        member_storage = await self.get_storage(message.author)
+        add_banned_user = member_storage.set('is_banned', message.author.id)
+        response = "You have now globally opted out from leveling."
+        await self.mee6.send_message(message.channel, response)
 
     @command(pattern="!levels",
              description="Get a link to the server leaderboard",
