@@ -36,7 +36,7 @@ class Levels(Plugin):
         # if nobody gives them an banned role or wants to.
         member_storage = await self.get_storage(member)
         banned_roles = await storage.smembers('banned_roles')
-        banned_user: = await storage.get('is_banned')
+        banned_user = await storage.get('is_banned')
         if member.id in banned_user:
             return True
         for role in member.roles:
