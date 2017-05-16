@@ -50,12 +50,20 @@ class Levels(Plugin):
 
     # WIP Command.
     
-    @command(pattern="!optout"
-            description="Allows an user to opt out of leveling.")
+    @command(pattern="!optout",
+             description="Allows an user to opt out of leveling.")
     async def optout(self, message, args):
         member_storage = await self.get_storage(message.author)
         add_banned_user = member_storage.set('is_banned', message.author.id)
         response = "You have now globally opted out from leveling."
+        await self.mee6.send_message(message.channel, response)
+
+    @command(pattern="!optin",
+             description="Allows an user to opt back in to leveling.")
+    async def optin(self, message, args):
+        member_storage = await self.get_storage(message.author)
+        add_banned_user = member_storage.set('is_banned', "")  # clear this out.
+        response = "You have now globally opted in to leveling."
         await self.mee6.send_message(message.channel, response)
 
     @command(pattern="!levels",
